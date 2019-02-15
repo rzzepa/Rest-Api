@@ -13,20 +13,10 @@ import java.util.List;
 @RequestMapping("/api")
 public class CustomerRestController {
 
-    List<Customer> theCustomers;
 
     @Autowired
     private CustomerService Customerservice;
 
-
-    @PostConstruct
-    public void loadData() {
-        theCustomers = new ArrayList<>();
-
-        theCustomers.add(new Customer("Marcin", "Rzepko", "rzepa1005@gmail.com"));
-        theCustomers.add(new Customer("Lol", "Chuj", "Ciwdupe@wp.pl"));
-        theCustomers.add(new Customer("Jan", "Kowalski", "kowalskilowcaszparek@o2.pl"));
-    }
 
     @GetMapping("/customers")
     public List<Customer> getCustomers() {
@@ -36,8 +26,48 @@ public class CustomerRestController {
     }
 
     @GetMapping("/customers/{customerid}")
-    public Customer getCustomer(@PathVariable int customerid)
-    {
-        return theCustomers.get(customerid);
+    public Customer getCustomer(@PathVariable int customerid) {
+        Customer customer=null;
+        for (int i = 0; i < Customerservice.getCustomers().size(); i++) {
+            if(Customerservice.getCustomers().get(i).getId()==customerid) customer=Customerservice.getCustomers().get(i);
+        }
+        if(customer==null)
+        {
+            throw new CustomerNotFoundException("Customer id not found - " + customerid);
+        }
+        return customer;
     }
+
+    @PostMapping("/customers")
+    public Customer addCustomer(@RequestBody Customer theCustomer)
+    {
+        theCustomer.setId(0);
+        Customerservice.saveCustomer(theCustomer);
+        return theCustomer;
+    }
+
+    @PutMapping("/customers")
+    public Customer updateCustomer(@RequestBody Customer theCustomer)
+    {
+        Customerservice.saveCustomer(theCustomer);
+        return theCustomer;
+    }
+
+
+    @DeleteMapping("/customers/{customerid}")
+    public String deleteCustomer(@PathVariable int customerid)
+    {
+        Customer customer=null;
+        for (int i = 0; i < Customerservice.getCustomers().size(); i++) {
+            if(Customerservice.getCustomers().get(i).getId()==customerid) customer=Customerservice.getCustomers().get(i);
+        }
+        if(customer==null)
+        {
+            throw new CustomerNotFoundException("Customer id not found - " + customerid);
+        }
+        Customerservice.deleteCustomer(customer.getId());
+        return "Delete customer id - "+customerid;
+    }
+
+
 }
