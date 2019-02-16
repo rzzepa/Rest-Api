@@ -1,21 +1,49 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 
 <html>
 
 <head>
-	<title>luv2code Company Home Page</title>
+	<title>Site under construction</title>
 </head>
 
 <body>
-	<h2>luv2code Company Home Page</h2>
+	<h4>Site under construction</h4>
 	<hr>
 	
 	<p>
 	<h4>Welcome!</h4>
 	</p>
 
+    <p>
+    User: <security:authentication property="principal.username"/>
+    <br><br>
+    Role(s): <security:authentication property="principal.authorities"/>
+    </p>
+
+
 	<a href="${pageContext.request.contextPath}/api/customers">Customers List</a>
-	
+    <br><br>
+
+    <!-- MENGEER -->
+
+    <security:authorize access="hasRole('MANAGER')">
+    
+    <p>
+        <a href="${pageContext.request.contextPath}/leaders"> Leadership Meeting(For Menagers and Admins)</a>
+
+    </p>
+    </security:authorize>
+
+    <!-- ADMIN -->
+    <security:authorize access="hasRole('ADMIN')">
+    <p>
+        <a href="${pageContext.request.contextPath}/admins"> Admins Page (Only For Admins)</a>
+
+    </p>
+    </security:authorize>
+
+    <br><br>
 	<!-- Add a logout button -->
 	<form:form action="${pageContext.request.contextPath}/logout" 
 			   method="POST">

@@ -11,4 +11,16 @@ public class DemoController {
 		
 		return "home.jsp";
 	}
+
+    @GetMapping("/leaders")
+    public String showLeaders() {
+
+        return "leaders.jsp";
+    }
+
+    @GetMapping("/admins")
+    public String showAdmin() {
+
+        return "admins.jsp";
+    }
 }
